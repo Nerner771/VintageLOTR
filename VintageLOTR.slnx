@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="VintageLOTR/CakeBuild/CakeBuild.csproj" />
+  <Project Path="VintageLOTR/VintageLOTR/VintageLOTR.csproj" />
+</Solution>
