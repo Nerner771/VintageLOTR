@@ -30,4 +30,8 @@
   <PackageReference Include="SkiaSharp" Version="3.119.4" />
 </ItemGroup>
 
+<ItemGroup>
+  <Folder Include="assets\VintageLOTR\itemtypes\" />
+</ItemGroup>
+
 </Project>

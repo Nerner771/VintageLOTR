@@ -1,0 +1,65 @@
+{
+  "code": "",
+  "class": "Item",
+  "creativeinventory": {
+    "general": [ "*" ]
+  },
+  "shape": {
+    "base": "item/tool/sword"
+  },
+  "texture": {
+    "base": "item/tool/mythril_sword"
+  },
+  "attackpower": 3.5,
+  "attackrange": 2.5,
+  "durability": 1200,
+  "maxstacksize": 1,
+  "tool": "sword",
+  "sidesolid": {
+    "all": false
+  },
+  "sideopaque": {
+    "all": false
+  },
+  "collisionbox": null,
+  "selectionbox": null,
+  "combustibleprops": {
+    "burnable": false
+  },
+  "tpHandTransform": {
+    "translation": {
+      "x": -1.2,
+      "y": -0.7,
+      "z": -2.0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 180,
+      "z": 0
+    }
+  },
+  "guiTransform": {
+    "translation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  },
+  "groundTransform": {
+    "translation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    }
+  }
+}
