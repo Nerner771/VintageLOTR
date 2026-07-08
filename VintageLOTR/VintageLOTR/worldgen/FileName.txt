@@ -1,0 +1,131 @@
+using HarmonyLib;
+using System;
+using Vintagestory.API.Common;
+using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
+using Vintagestory.ServerMods;
+using Vintagestory.ServerMods.NoObf;
+
+namespace VintageLOTR.worldgen;
+
+[HarmonyPatch(typeof(GenTerra), "generate")]  // ← патчим generate(), а не OnChunkColumnGen
+public static class GenTerraPatch
+{
+    private static ushort _seaHeight = 30;
+    private static ICoreServerAPI _api;
+    private static bool logged = false;
+
+    public static void Init(ICoreServerAPI api)
+    {
+        _api = api;
+    }
+
+    public static class ChunkContext
+    {
+        public static int CurrentChunkX { get; set; } = -1;
+        public static int CurrentChunkZ { get; set; } = -1;
+        public static bool IsActive { get; set; } = false;
+        public static bool IsSea = false;
+    }
+
+    [HarmonyPatch(typeof(GenTerra), "generate")]
+    public static class GenTerraGeneratePatch
+    {
+        [HarmonyPrefix]
+        public static void Prefix(IServerChunk[] chunks, int chunkX, int chunkZ, bool requiresChunkBorderSmoothing)
+        {
+            // Сохраняем координаты текущего чанка
+            ChunkContext.CurrentChunkX = chunkX;
+            ChunkContext.CurrentChunkZ = chunkZ;
+            ChunkContext.IsActive = true;
+            IsSea(chunkX, chunkZ);
+        }
+
+        [HarmonyPostfix]
+        public static void Postfix()
+        {
+            // Очищаем после завершения
+            ChunkContext.IsActive = false;
+            ChunkContext.IsSea = false;
+        }
+    }
+
+
+
+    [HarmonyPatch(typeof(GenTerra), "ContinueSampleDisplacedYThreshold")]
+    public static class ThresholdPatch
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref float __result, int yBase, float ySlide, float[] thresholds)
+        {
+            if (!ChunkContext.IsActive) return;
+
+            int chunkX = ChunkContext.CurrentChunkX;
+            int chunkZ = ChunkContext.CurrentChunkZ;
+
+            // Проверяем по карте: море здесь или нет?
+            if (ChunkContext.IsSea)
+
+            {
+                // Если море — делаем threshold гарантированно низким
+                __result = 0.9f; // Очень низкое значение → всегда блок (вода)
+            }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(NewNormalizedSimplexFractalNoise.ColumnNoise), "NoiseSign")]
+    public static class NoiseSignPatch
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(ref double __result, double y, double inverseCurvedThresholder)
+        {
+            if (!ChunkContext.IsActive) return true;
+
+            int chunkX = ChunkContext.CurrentChunkX;
+            int chunkZ = ChunkContext.CurrentChunkZ;
+
+            if (ChunkContext.IsSea)
+            {
+                // Если море — возвращаем отрицательное значение (пустота)
+                // Но только для высот выше уровня моря
+                int floorHeight = GetFloorHeight(chunkX, chunkZ); // ← новое дно
+
+
+                if (y <= floorHeight)
+                {
+                    __result = 1.0;  // Блок (камень/песок)
+
+                }
+                else
+                {
+                    // Между дном и уровнем моря — ВОДА
+                    __result = -1.0; // Пустота, но вода зальётся автоматически
+
+                }
+                return false;
+            }
+
+            return true; // Не море — вызываем оригинал
+        }
+    }
+
+    private static void IsSea(int chunkX, int chunkZ)
+    {
+        int pixel = HeightmapReader.GetPixelColor(chunkX, chunkZ)[0];
+        ChunkContext.IsSea = pixel < 30;
+        //System.Console.WriteLine($"[IsSea] chunk=({chunkX},{chunkZ}), brightness={brightness}, isSea={ChunkContext.IsSea}");
+    }
+
+    private static int GetFloorHeight(int blockX, int blockZ)
+    {
+
+
+
+        int seaLevel = 110;
+        int floorHeight = seaLevel - (int)(80f * 0.02f * (30 - HeightmapReader.GetPixelColor(blockX, blockZ)[0]));
+
+        return floorHeight;
+    }
+
+}

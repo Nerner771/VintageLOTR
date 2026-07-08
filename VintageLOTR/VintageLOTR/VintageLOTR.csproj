@@ -1,17 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin\$(Configuration)\Mods\mod</OutputPath>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>D:\Games\Vintage Story\Lib\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp">
+      <HintPath>D:\Games\Vintage Story\Lib\SkiaSharp.dll</HintPath>
+    </Reference>
     <Reference Include="VintagestoryAPI">
       <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
       <Private>false</Private>
     </Reference>
+	  <Reference Include="VSEssentials">
+		  <HintPath>D:\Games\Vintage Story\Mods\VSEssentials.dll</HintPath>
+		  <Private>false</Private>
+	  </Reference>
   </ItemGroup>
 
 <ItemGroup>
@@ -26,8 +36,15 @@
   </Content>
 </ItemGroup>
 
+
 <ItemGroup>
-  <PackageReference Include="SkiaSharp" Version="3.119.4" />
+  <Folder Include="assets\VintageLOTR\itemtypes\" />
+  <Folder Include="assets\VintageLOTR\textures\" />
+</ItemGroup>
+
+
+<ItemGroup>
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 </ItemGroup>
 
 <ItemGroup>
