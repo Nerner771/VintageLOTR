@@ -12,8 +12,9 @@ namespace VintageLOTR
 {
     public class VintageLOTRModSystem : ModSystem
     {
-        private ICoreServerAPI _api;
+        private static ICoreServerAPI _api;
         private Harmony _harmony;
+        public static LOTRMap MapReaderInstance { get; private set; }
 
         public override void StartServerSide(ICoreServerAPI api)
         {
@@ -21,27 +22,23 @@ namespace VintageLOTR
             base.StartServerSide(api);
             _api = api;
             HeightmapReader.LoadHeightmap(api);
-       
+            MapReaderInstance = new LOTRMap();
+
 
 
             _harmony = new Harmony(Mod.Info.ModID);
             _harmony.PatchAll();
             // Регистрируемся на событие генерации региона
-            api.Event.MapRegionGeneration(OnMapRegionGen, "standard");
+
             api.Logger.Notification("[VintageLOTR] Патч успешно применён! Значение высоты для всех блоков - ");
 
-        
+
         }
 
-        private void OnMapRegionGen(IMapRegion mapRegion, int regionX, int regionZ, ITreeAttribute chunkGenParams)
+        public static IntDataMap2D GetCustomLandformMap(IMapRegion mapRegion, int regionX, int regionZ)
         {
-            // Создаём свою карту с одинаковым индексом
-            IntDataMap2D customMap = ChunkGen.CreateUniformMap(_api, mapRegion, regionX, regionZ);
-
-            // Подменяем стандартную карту ландшафта
-            mapRegion.LandformMap = customMap;
-
-            System.Console.WriteLine($"[VintageLOTR] Регион ({regionX}, {regionZ}) — сгенерирован");
+            // Вызываем ваш рабочий метод (переименуйте ChunkGen под вашу структуру, если нужно)
+            return ChunkGen.CreateUniformMap(_api, mapRegion, regionX, regionZ);
         }
 
         public override void Dispose()

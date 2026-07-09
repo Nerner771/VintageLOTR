@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="worldgen\Новая папка\ColumnNoiseHelper.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>D:\Games\Vintage Story\Lib\0Harmony.dll</HintPath>
     </Reference>

@@ -23,7 +23,7 @@ public static class HeightmapReader
 
     public static void LoadHeightmap(ICoreServerAPI api)
     {
-        AssetLocation location = new AssetLocation("vintagelotr", "textures/white_circle2.json");
+        AssetLocation location = new AssetLocation("vintagelotr", "textures/white_circle4.json");
         IAsset asset = api.Assets.Get(location);
 
 
@@ -66,7 +66,7 @@ public static class HeightmapReader
         if (chunkX < 0 || chunkX >= heightmap.width || chunkZ < 0 || chunkZ >= heightmap.height)
         {
 
-            System.Console.WriteLine("[GetPixelColor] Чанк за границами карты! Возвращаю 0! ");
+            //System.Console.WriteLine("[GetPixelColor] Чанк за границами карты! Возвращаю 0! ");
             return new int[] { 0, 0, 0, 255 };  // за границами — море
 
         }

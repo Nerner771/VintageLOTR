@@ -3,7 +3,7 @@ using Vintagestory.API.Common;
 
 namespace VintageLOTR.worldgen
 {
-    internal class LOTRMap
+    public class LOTRMap
     {
         static ICoreAPI api;
 
